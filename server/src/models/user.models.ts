@@ -17,7 +17,7 @@ interface Iuser extends Document
     googleId: string,
     isVerified: boolean,
     avatar: string,
-    address: mongoose.Schema<Iaddress>,
+    address: Iaddress,
     refreshToken: string,
     createdAt: Date,
     getPhoneNumber: () => string,
@@ -191,5 +191,5 @@ userSchema.methods.generateRefreshToken = function ()
 
 const User = mongoose.model<Iuser>( "User", userSchema )
 
-export { User };
-export type { Iuser };
+export { User, addressSchema };
+export type { Iuser,Iaddress};
