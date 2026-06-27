@@ -1,0 +1,27 @@
+
+services:
+  redis:
+    image: redis:7-alpine 
+    container_name: redis-server
+    volumes:
+      - redis-data:/data
+    ports:
+      - 6379:6379
+
+  mongo:
+    image: mongo:7
+    container_name: mongo-server
+    volumes:
+      - mongo-data:/data/db
+    ports:
+      - 27017:27017
+
+
+
+
+
+volumes:
+  redis-data:
+    external: true
+  mongo-data:
+    external: true
