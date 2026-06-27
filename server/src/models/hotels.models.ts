@@ -3,7 +3,8 @@ import mongoose from "mongoose";
 import type { Document, Types } from "mongoose";
 import type { Iaddress } from "./user.models.js";
 import { addressSchema } from "./user.models.js";
-import { Decipheriv } from "node:crypto";
+
+
 
 interface Ihotel extends Document
 {
@@ -40,6 +41,8 @@ const hotelSchema = new mongoose.Schema<Ihotel>( {
     ],
     rating: {
         type: Number,
+        required: true,
+        index: true,
         default: 0
     },
     checkInTime: {
