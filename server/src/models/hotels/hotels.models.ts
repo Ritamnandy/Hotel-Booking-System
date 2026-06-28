@@ -1,9 +1,8 @@
 
 import mongoose from "mongoose";
 import type { Document, Types } from "mongoose";
-import type { Iaddress } from "./user.models.js";
-import { addressSchema } from "./user.models.js";
-
+import type { Iaddress } from "../auth/user.models.js";
+import { addressSchema } from "../auth/user.models.js";
 
 
 interface Ihotel extends Document

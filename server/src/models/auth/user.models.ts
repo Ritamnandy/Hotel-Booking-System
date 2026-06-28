@@ -5,6 +5,7 @@ import crypto from "crypto"
 import jwt from "jsonwebtoken"
 import type { SignOptions, Secret } from "jsonwebtoken"
 import { Document } from "mongoose";
+import { UserRole,LoginType } from "../constants.js";
 
 interface Iuser extends Document
 {
@@ -15,16 +16,17 @@ interface Iuser extends Document
     password: string,
     role: string,
     googleId: string,
+    logintype:string,
     isVerified: boolean,
     avatar: string,
     address: Iaddress,
     refreshToken: string,
     createdAt: Date,
+    updatedAt: Date
     getPhoneNumber: () => string,
     comparePassword:()=>Promise<boolean>,
     generateAccessToken: () => string,
     generateRefreshToken: () => string,
-    updatedAt: Date
 }
 
 interface Iaddress extends Document
@@ -94,6 +96,15 @@ const userSchema = new mongoose.Schema<Iuser>( {
         type: String,
         default: "",
         trim: true
+    },
+    role: {
+        type: String,
+        enum: UserRole,
+        required: true,
+    },
+    logintype: {
+        type: String,
+        enum: LoginType
     },
     isVerified: {
         type: Boolean,

@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import type { Document, Types } from "mongoose";
-import { Payment_Status } from "../constants.js";
+import { Payment_Status } from "../../constants.js";
 
 interface IBooking extends Document
 {
