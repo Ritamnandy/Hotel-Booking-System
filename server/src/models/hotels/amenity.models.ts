@@ -4,7 +4,7 @@ import type { Document, Types } from "mongoose";
 interface IAmenity extends Document
 {
     name: string;
-    hotel: Types.ObjectId;
+    hotelId: Types.ObjectId;
     icon: string;
 }
 const amenitySchema = new mongoose.Schema<IAmenity>( {
@@ -18,7 +18,7 @@ const amenitySchema = new mongoose.Schema<IAmenity>( {
         type: String,
         default: "",
     },
-    hotel: {
+    hotelId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Hotel",
         required: true

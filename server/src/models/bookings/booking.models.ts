@@ -1,26 +1,83 @@
 import mongoose from "mongoose";
 import type { Document, Types } from "mongoose";
-import { Payment_Status } from "../../constants.js";
+
 
 interface IBooking extends Document
 {
     bookingNumber: string,
-    user: Types.ObjectId,
-    hotel: Types.ObjectId,
-    roomType: Types.ObjectId,
-    room: Types.ObjectId,
-    payment: Types.ObjectId,
+    userId: Types.ObjectId,
+    hotelId: Types.ObjectId,
+    roomTypeId: Types.ObjectId,
+    roomNoId: Types.ObjectId
+    paymentId: Types.ObjectId,
     checkIn: Date,
     checkOut: Date,
     adults: number,
     children: number,
     totalPrice: number,
-    paymentStatus: string,
-    roomNo: Types.ObjectId
 }
 
 
-const BookingSchema = new mongoose.Schema( {}, { timestamps: true } )
+const BookingSchema = new mongoose.Schema<IBooking>( {
+    bookingNumber: {
+        type: String,
+        required: true,
+        unique: true
+    },
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true
+    },
+    hotelId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Hotel",
+        required: true
+    },
+    roomTypeId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "RoomType",
+        required: true
+    },
+    roomNoId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "RoomNo",
+        required: true
+    }
+    ,
+    paymentId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Payment",
 
-const Booking = mongoose.model("Booking", BookingSchema)
-export {Booking}
+    },
+    checkIn: {
+        type: Date,
+        required: true
+    },
+    checkOut: {
+        type: Date,
+        required: true
+    },
+    adults: {
+        type: Number,
+        required: true
+    },
+    children: {
+        type: Number,
+        required: true
+    },
+    totalPrice: {
+        type: Number,
+        required: true
+    },
+
+
+}, { timestamps: true } )
+
+const Booking = mongoose.model<IBooking>( "Booking", BookingSchema )
+
+
+export { Booking }
+
+export type { IBooking }
+

@@ -8,7 +8,7 @@ import { addressSchema } from "../auth/user.models.js";
 interface Ihotel extends Document
 {
     name: string
-    owner: Types.ObjectId
+    ownerId: Types.ObjectId
     address: Iaddress
     description: string
     photos: string[]
@@ -22,7 +22,7 @@ const hotelSchema = new mongoose.Schema<Ihotel>( {
         type: String,
         required: true
     },
-    owner: {
+    ownerId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
         required: true

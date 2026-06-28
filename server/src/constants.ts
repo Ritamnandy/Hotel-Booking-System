@@ -1,4 +1,4 @@
-
+const Db_Name = "Hotel_Booking"
 
 enum Room_Type
 {
@@ -51,8 +51,6 @@ enum LoginType
 
 
 
-
-
 export
 {
     Room_Type,
@@ -60,5 +58,6 @@ export
     Room_status,
     Payment_Status,
     UserRole,
-    LoginType
+    LoginType,
+    Db_Name
 }
