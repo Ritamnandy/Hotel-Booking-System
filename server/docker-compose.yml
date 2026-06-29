@@ -12,7 +12,7 @@ services:
     image: mongo:7
     container_name: mongo-server
     volumes:
-      - mongo-data:/data/db
+      -  mongodb-data:/data/db
     ports:
       - 27017:27017
 
@@ -23,5 +23,5 @@ services:
 volumes:
   redis-data:
     external: true
-  mongo-data:
+  mongodb-data:
     external: true

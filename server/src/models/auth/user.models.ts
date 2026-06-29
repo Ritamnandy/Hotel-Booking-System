@@ -5,7 +5,7 @@ import crypto from "crypto"
 import jwt from "jsonwebtoken"
 import type { SignOptions, Secret } from "jsonwebtoken"
 import { Document } from "mongoose";
-import { UserRole,LoginType } from "../constants.js";
+import { UserRole,LoginType } from "../../constants.js";
 
 interface Iuser extends Document
 {
@@ -136,9 +136,9 @@ const iv: string = process.env.ENCRYPTION_IV as string;
 userSchema.pre( "save", function ()
 {
     const cipher = crypto.createCipheriv( algorithm, key, iv )
-    let encrypted = cipher.update( this.password, "utf8", "hex" )
+    let encrypted = cipher.update( this.phoneNo, "utf8", "hex" )
     encrypted += cipher.final( "hex" )
-    this.password = encrypted
+    this.phoneNo = encrypted
 })
 
 
