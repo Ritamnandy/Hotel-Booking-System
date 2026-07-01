@@ -124,12 +124,13 @@ const resendOtp = asyncHandler( async ( req, res ) =>
     {
         return res.status( 400 ).json( new ApiError( 400, "Email is required", [ "Email is required" ] ) )
     }
-    const rowUser = await redis.get( signUpKey( email ) );
+
+    const rowUser: string | null = await redis.get( signUpKey( email ) );
     if ( !rowUser )
     {
         return res.status( 400 ).json( new ApiError( 400, "User not found", [ "User not found" ] ) )
     }
-    const pendingUser: string | null = JSON.parse( rowUser as string )
+    const pendingUser: IuserData = JSON.parse( rowUser as string )
     if ( !pendingUser )
     {
         return res.status( 400 ).json( new ApiError( 400, "User not found", [ "User not found" ] ) )
@@ -167,6 +168,7 @@ interface IuserData
 {
     firstName: string,
     lastName: string,
+    email: string,
     phoneNo: string,
     password: string
 }
@@ -204,7 +206,7 @@ const verifyEmail = asyncHandler( async ( req, res ) =>
         return res.status( 400 ).json( new ApiError( 400, "User not found", [ "User not found" ] ) )
     }
 
-    const userData = JSON.parse( rowdata as string )
+    const userData: IuserData = JSON.parse( rowdata as string )
     if ( !userData )
     {
         return res.status( 400 ).json( new ApiError( 400, "User not found", [ "User not found" ] ) )
@@ -229,15 +231,18 @@ const verifyEmail = asyncHandler( async ( req, res ) =>
     {
         return res.status( 500 ).json( new ApiError( 500, "Token not created", [ "Token not created or  internal server error" ] ) )
     }
-    const createdUser: Iuser = await User.findById( user._id ).select( "-password -googleId -logintype -phoneNo -refreshToken" )
-    if ( !createdUser )
-    {
-        return res.status( 500 ).json( new ApiError( 500, "User not found", [ "User not found or internal server error" ] ) )
-    }
+    
+    const responseUser = user.toObject()
+    delete responseUser.password
+    delete responseUser.refreshToken
+    delete responseUser.googleId
+    delete responseUser.phoneNo
+    delete responseUser.logintype;
+
     await redis.del( otpKey( email ) )
     await redis.del( signUpKey( email ) )
     res.status( 200 )
         .cookie( "accessToken", accessToken, options )
         .cookie( "refreshToken", refreshToken, options )
-        .json( new ApiResponse( 200, "Email verified successfully", [ "Email verified successfully", { user: createdUser, accessToken: accessToken, refreshToken: refreshToken } ] ) )
+        .json( new ApiResponse( 200, "Email verified successfully", [ "Email verified successfully", { user: responseUser, accessToken: accessToken, refreshToken: refreshToken } ] ) )
 } )
