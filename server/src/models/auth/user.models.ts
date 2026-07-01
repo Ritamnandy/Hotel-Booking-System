@@ -104,7 +104,8 @@ const userSchema = new mongoose.Schema<Iuser>( {
     },
     logintype: {
         type: String,
-        enum: LoginType
+        enum: LoginType,
+        default: LoginType.EMAIL_PASSWORD
     },
     isVerified: {
         type: Boolean,
