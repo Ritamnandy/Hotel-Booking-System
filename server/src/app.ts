@@ -5,6 +5,9 @@ import cookieParser from "cookie-parser"
 import compression from "compression"
 import passport from "passport"
 import requestIp from 'request-ip';
+import "./jobs/worker.jobs.js"
+
+
 
 const app = express()
 
