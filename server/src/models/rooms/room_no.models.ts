@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import type { Document, Types } from "mongoose";
-import { Room_status } from "../constants.js";
+import { Room_status } from "../../constants.js";
 interface IRoomNo extends Document {
     roomno: string;
     hotel: Types.ObjectId;

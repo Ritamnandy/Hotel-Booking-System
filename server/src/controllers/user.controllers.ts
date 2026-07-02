@@ -1,6 +1,6 @@
 
 import { User } from "../models/auth/user.models.js";
-import type { Iuser } from "../models/auth/user.models.js";
+import type { Iuser, Iaddress } from "../models/auth/user.models.js";
 import { asyncHandler } from "../utils/asynchandler.js";
 import { ApiError } from "../utils/apierror.js";
 import { ApiResponse } from "../utils/apiresponse.js";
@@ -441,7 +441,80 @@ const socialLogin = asyncHandler( async ( req, res ) =>
         .json( new ApiResponse( 200, "user login successfully", [ "user login successfully", { user: responseUser, accessToken: accessToken, refreshToken: refreshToken } ] ) )
 } )
 
+// add address 
+interface addAddressBody
+{
+    country: string,
+    state: string,
+    city: string,
+    pincode: string
+}
+const addAddress = asyncHandler( async ( req, res ) =>
+{
+    const user: Iuser | null = req.user as Iuser;
 
+    const { country, state, city, pincode } = req.body as addAddressBody;
+    if ( !user )
+    {
+        return res.status( 401 ).json( new ApiError( 401, "Unauthorized request", [ "unauthorized request, user not found" ] ) )
+    }
+    user.address = { country, state, city, pincode } as Iaddress
+
+    await user.save( { validateBeforeSave: false } );
+
+    return res.status( 200 ).json( new ApiResponse( 200, "Address added successfully", [ "Address added successfully", { addres: user.address } ] ) )
+} )
+
+// update address
+
+const updateAddress = asyncHandler( async ( req, res ) =>
+{
+    const user: Iuser | null = req.user as Iuser;
+    const { country, state, city, pincode } = req.body as addAddressBody;
+    if ( !user )
+    {
+        return res.status( 401 ).json( new ApiError( 401, "Unauthorized request", [ "unauthorized request, user not found" ] ) )
+    }
+    if ( country !== undefined || country !== "" )
+    {
+        user.address.country = country;
+    }
+
+    if ( state !== undefined || state !== "" )
+    {
+        user.address.state = state;
+    }
+
+    if ( city !== undefined || city !== "" )
+    {
+        user.address.city = city;
+    }
+
+    if ( pincode !== undefined || pincode !== "" )
+    {
+        user.address.pincode = pincode;
+    }
+
+    await user.save( { validateBeforeSave: false } );
+    return res.status( 200 ).json( new ApiResponse( 200, "Address updated successfully", [ "Address updated successfully", { addres: user.address } ] ) )
+} )
+
+
+//delete address
+
+const deleteAddress = asyncHandler( async ( req, res ) =>
+{
+    const user: Iuser | null = req.user as Iuser
+    if ( !user )
+    {
+        return res.status( 401 ).json( new ApiError( 401, "Unauthorized request", [ "unauthorized request, user not found" ] ) )
+    }
+    user.address = { country: "", state: "", city: "", pincode: "" } as Iaddress
+    await user.save( { validateBeforeSave: false } );
+    return res.status( 200 ).json( new ApiResponse( 200, "Address deleted successfully", [ "Address deleted successfully", { addres: user.address } ] ) )
+} )
+
+//get user data
 const getUserDetails = asyncHandler( async ( req, res ) =>
 {
     const user: Iuser | null = req.user as Iuser
@@ -459,9 +532,6 @@ const getUserDetails = asyncHandler( async ( req, res ) =>
 } )
 
 
-
-
-
 export
 {
     registerUser,
@@ -473,5 +543,8 @@ export
     forgetPassword,
     resetPassword,
     socialLogin,
+    addAddress,
+    updateAddress,
+    deleteAddress,
     getUserDetails
 }

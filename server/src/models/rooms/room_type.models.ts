@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import type { Document, Types } from "mongoose";
-import { Room_Type } from "../constants.js";
+import { Room_Type } from "../../constants.js";
 
 
 
