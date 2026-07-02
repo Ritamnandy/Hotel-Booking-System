@@ -1,16 +1,58 @@
 
-import multer from "multer"
+import multer, { type FileFilterCallback } from "multer"
+import type { Request, Response, NextFunction } from "express"
 
 const storage = multer.diskStorage( {
-    destination: function ( req, file, cb )
+    destination: (
+        _req: Request,
+        _file: Express.Multer.File,
+        cb
+    ) =>
     {
-        cb( null, '/src/public/' )
+        cb( null, "/src/public/" );
     },
-    filename: function ( req, file, cb )
+
+    filename: (
+        _req: Request,
+        file: Express.Multer.File,
+        cb
+    ) =>
     {
-        cb( null, file.originalname )
+        cb( null, file.originalname );
     }
-} )
+} );
 
 
-export const upload = multer( { storage: storage } )
+const fileFilter = (
+    _req: Request,
+    file: Express.Multer.File,
+    cb: FileFilterCallback
+) =>
+{
+    const allowedMimeTypes = [
+        "image/jpeg",
+        "image/png",
+        "image/webp",
+        "image/jpg",
+    ];
+
+    if ( allowedMimeTypes.includes( file.mimetype ) )
+    {
+        cb( null, true );
+    } else
+    {
+        cb( new Error( "Invalid file type" ) );
+    }
+};
+
+
+
+
+export const upload = multer(
+    {
+        storage: storage,
+        fileFilter,
+        limits: {
+            fileSize: 1024 * 1024 * 5
+        }
+    } )
