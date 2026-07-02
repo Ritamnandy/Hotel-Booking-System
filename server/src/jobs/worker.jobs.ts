@@ -1,6 +1,6 @@
 
 import { Worker } from "bullmq";
-import { sendVerificationEmail } from "../utils/mail.js";
+import { sendVerificationEmail, sendForgetPasswordEmail } from "../utils/mail.js";
 
 const connection = {
     host: process.env.REDIS_HOST as string,
@@ -15,7 +15,12 @@ const redisWorker = new Worker( "TaskQueue", async ( job ) =>
         const { email, userName, code } = job.data
         await sendVerificationEmail( email, userName, code )
     }
-}, { connection } )
+    if ( job.name === "send-reset-password-email" )
+    {
+        const { email, userName, link } = job.data
+        await sendForgetPasswordEmail( email, userName, link )
+    }
+}, { connection, concurrency: 5 } )
 
 redisWorker.on( "error", ( error ) =>
 {
