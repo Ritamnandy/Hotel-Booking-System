@@ -44,6 +44,7 @@ const registerValidation = () =>
             .trim()
             .notEmpty()
             .withMessage( "Phone number is required" )
+            .bail()
             .isLength( { min: 10 } )
             .withMessage( "Phone number must be at least 10 characters long" )
             .isString()
@@ -60,6 +61,7 @@ const verifyEmailValidation = () =>
             .trim()
             .notEmpty()
             .withMessage( "Email is required" )
+            .bail()
             .isEmail()
             .withMessage( "Email is not valid" )
             .normalizeEmail()
@@ -68,6 +70,7 @@ const verifyEmailValidation = () =>
             .trim()
             .notEmpty()
             .withMessage( "OTP is required" )
+            .bail()
             .isLength( { min: 6, max: 6 } )
             .withMessage( "OTP must be at least 6 characters long" )
             .isString()
@@ -81,6 +84,7 @@ const loginValidation = () =>
         body( "email" )
             .notEmpty()
             .withMessage( "Email is required" )
+            .bail()
             .isEmail()
             .withMessage( "Email is not valid" )
             .normalizeEmail()
@@ -88,7 +92,14 @@ const loginValidation = () =>
         body( "password" )
             .notEmpty()
             .withMessage( "Password is required" )
-            .isLength( { min: 6 } )
+            .bail()
+            .isStrongPassword( {
+                minLength: 8,
+                minLowercase: 1,
+                minUppercase: 1,
+                minNumbers: 1,
+                minSymbols: 1
+            } )
             .withMessage( "Password must be at least 6 characters long" )
             .isString()
             .withMessage( "Password must be a string" )

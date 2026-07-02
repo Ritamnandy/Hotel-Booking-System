@@ -5,7 +5,7 @@ import crypto from "crypto"
 import jwt from "jsonwebtoken"
 import type { SignOptions, Secret } from "jsonwebtoken"
 import { Document } from "mongoose";
-import { UserRole,LoginType } from "../../constants.js";
+import { UserRole, LoginType } from "../../constants.js";
 
 interface Iuser extends Document
 {
@@ -16,7 +16,7 @@ interface Iuser extends Document
     password: string,
     role: string,
     googleId: string,
-    logintype:string,
+    logintype: string,
     isVerified: boolean,
     avatar: string,
     address: Iaddress,
@@ -24,7 +24,7 @@ interface Iuser extends Document
     createdAt: Date,
     updatedAt: Date
     getPhoneNumber: () => string,
-    comparePassword:()=>Promise<boolean>,
+    comparePassword: ( password: string ) => Promise<boolean>,
     generateAccessToken: () => string,
     generateRefreshToken: () => string,
 }
@@ -130,8 +130,8 @@ userSchema.pre( "save", async function ()
     this.password = await bcrypt.hash( this.password, 10 )
 } )
 
-const algorithm:string = process.env.ENCRYPTION_ALGORITHM as string;
-const key:string = process.env.ENCRYPTION_KEY as string;
+const algorithm: string = process.env.ENCRYPTION_ALGORITHM as string;
+const key: string = process.env.ENCRYPTION_KEY as string;
 const iv: string = process.env.ENCRYPTION_IV as string;
 
 userSchema.pre( "save", function ()
@@ -140,7 +140,7 @@ userSchema.pre( "save", function ()
     let encrypted = cipher.update( this.phoneNo, "utf8", "hex" )
     encrypted += cipher.final( "hex" )
     this.phoneNo = encrypted
-})
+} )
 
 
 userSchema.methods.getPhoneNumber = function ()
@@ -204,4 +204,4 @@ userSchema.methods.generateRefreshToken = function ()
 const User = mongoose.model<Iuser>( "User", userSchema )
 
 export { User, addressSchema };
-export type { Iuser,Iaddress};
+export type { Iuser, Iaddress };

@@ -30,7 +30,7 @@ export const verifyJWT = asyncHandler( async ( req, res, next ) =>
             return res.status( 401 ).json( new ApiError( 401, "Unauthorized request", [ "unauthorized request, user not found" ] ) )
         }
 
-        req.user = user
+        (req.user) = user as Iuser
 
         next()
 
